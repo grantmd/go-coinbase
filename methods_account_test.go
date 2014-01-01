@@ -26,7 +26,7 @@ func TestAccountBalance(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(balance)
+	fmt.Printf("%+v\n", balance)
 }
 
 func TestAccountReceiveAddress(t *testing.T) {
@@ -37,5 +37,5 @@ func TestAccountReceiveAddress(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(address)
+	fmt.Printf("%+v\n", address)
 }

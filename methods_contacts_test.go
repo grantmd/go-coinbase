@@ -26,5 +26,5 @@ func TestContacts(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(contacts)
+	fmt.Printf("%+v\n", contacts)
 }

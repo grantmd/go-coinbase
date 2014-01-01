@@ -26,5 +26,5 @@ func TestUsers(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(users)
+	fmt.Printf("%+v\n", users)
 }

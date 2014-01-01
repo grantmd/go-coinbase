@@ -26,5 +26,5 @@ func TestAddresses(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(addresses)
+	fmt.Printf("%+v\n", addresses)
 }

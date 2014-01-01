@@ -26,7 +26,7 @@ func TestPricesBuy(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(prices)
+	fmt.Printf("%+v\n", prices)
 }
 
 func TestPricesSell(t *testing.T) {
@@ -37,7 +37,7 @@ func TestPricesSell(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(prices)
+	fmt.Printf("%+v\n", prices)
 }
 
 func TestSpotRate(t *testing.T) {
@@ -48,5 +48,5 @@ func TestSpotRate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(rate)
+	fmt.Printf("%+v\n", rate)
 }

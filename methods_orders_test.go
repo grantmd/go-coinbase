@@ -26,5 +26,5 @@ func TestOrders(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(orders)
+	fmt.Printf("%+v\n", orders)
 }

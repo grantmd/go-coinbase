@@ -26,7 +26,7 @@ func TestCurrencies(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(currencies)
+	fmt.Printf("%+v\n", currencies)
 }
 
 func TestCurrenciesExchangeRates(t *testing.T) {
@@ -37,5 +37,5 @@ func TestCurrenciesExchangeRates(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(rates)
+	fmt.Printf("%+v\n", rates)
 }
