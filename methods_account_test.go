@@ -12,7 +12,7 @@ func createAccountClient(t *testing.T) (c *Client) {
 	}
 
 	if c.APIKey == "" {
-		t.Error("Coinbase api key is missing (should be in the COINBASE_API_KEY environment variable)")
+		t.Skip("Coinbase api key is missing (should be in the COINBASE_API_KEY environment variable)")
 	}
 
 	return c
