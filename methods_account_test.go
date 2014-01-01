@@ -28,3 +28,14 @@ func TestAccountBalance(t *testing.T) {
 
 	fmt.Println(balance)
 }
+
+func TestAccountReceiveAddress(t *testing.T) {
+	c := createAccountClient(t)
+
+	address, err := c.AccountReceiveAddress()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println(address)
+}

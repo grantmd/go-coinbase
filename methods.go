@@ -68,10 +68,12 @@ func (c *Client) Addresses() (interface{}, error) {
 	}
 
 	type Address struct {
-		Address     string
-		CallbackUrl string
-		Label       string
-		CreatedAt   string
+		Address struct {
+			Address     string
+			CallbackUrl string
+			Label       string
+			CreatedAt   string
+		}
 	}
 
 	type Response struct {
@@ -140,16 +142,8 @@ func (c *Client) Currencies() (interface{}, error) {
 		return nil, err
 	}
 
-	type Currency struct {
-		Details []string
-	}
-
-	type Response struct {
-		Currencies []Currency
-	}
-
 	// parse into json
-	var response Response
+	var response [][]string
 	err = json.Unmarshal(body, &response)
 	if err != nil {
 		return nil, err
@@ -251,7 +245,7 @@ func (c *Client) PricesBuy() (interface{}, error) {
 
 	type Response struct {
 		SubTotal Amount
-		Fees     map[string]Amount
+		Fees     []map[string]Amount
 		Total    Amount
 	}
 
@@ -278,7 +272,7 @@ func (c *Client) PricesSell() (interface{}, error) {
 
 	type Response struct {
 		SubTotal Amount
-		Fees     map[string]Amount
+		Fees     []map[string]Amount
 		Total    Amount
 		Amount   string
 		Currency string
