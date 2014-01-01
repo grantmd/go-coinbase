@@ -33,7 +33,10 @@ func (c *Client) Call(http_method string, api_method string, params map[string]i
 	var req *http.Request
 	var err error
 	if http_method == "POST" {
-		params["api_key"] = c.APIKey
+		if c.APIKey != "" {
+			params["api_key"] = c.APIKey
+		}
+
 		postBody, err := json.Marshal(params)
 		if err != nil {
 			return nil, err
@@ -44,7 +47,10 @@ func (c *Client) Call(http_method string, api_method string, params map[string]i
 			return nil, err
 		}
 	} else if http_method == "GET" {
-		apiURL = apiURL + "/?api_key=" + c.APIKey
+		if c.APIKey != "" {
+			apiURL = apiURL + "/?api_key=" + c.APIKey
+		}
+
 		req, err = http.NewRequest("GET", apiURL, nil)
 		if err != nil {
 			return nil, err
