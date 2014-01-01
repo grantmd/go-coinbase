@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 )
 
 const (
@@ -22,7 +23,7 @@ type Client struct {
 }
 
 // Call an API method with auth, return the raw, unprocessed body
-func (c *Client) Call(http_method string, api_method string, params map[string]interface{}) ([]byte, error) {
+func (c *Client) Call(http_method string, api_method string, params url.Values) ([]byte, error) {
 	// Build HTTP client
 	if c.httpClient == nil {
 		c.httpClient = &http.Client{}
@@ -30,13 +31,18 @@ func (c *Client) Call(http_method string, api_method string, params map[string]i
 
 	apiURL := COINBASE_API_ENDPOINT + api_method
 
+	if params == nil {
+		params = url.Values{}
+	}
+
+	if c.APIKey != "" {
+		params.Set("api_key", c.APIKey)
+	}
+
 	var req *http.Request
 	var err error
 	if http_method == "POST" {
-		if c.APIKey != "" {
-			params["api_key"] = c.APIKey
-		}
-
+		// TODO: Need to massage the params a bit
 		postBody, err := json.Marshal(params)
 		if err != nil {
 			return nil, err
@@ -47,10 +53,7 @@ func (c *Client) Call(http_method string, api_method string, params map[string]i
 			return nil, err
 		}
 	} else if http_method == "GET" {
-		if c.APIKey != "" {
-			apiURL = apiURL + "/?api_key=" + c.APIKey
-		}
-
+		apiURL = apiURL + "/?" + params.Encode()
 		req, err = http.NewRequest("GET", apiURL, nil)
 		if err != nil {
 			return nil, err
@@ -74,6 +77,8 @@ func (c *Client) Call(http_method string, api_method string, params map[string]i
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Println(string(body))
 
 	// TODO: Check status code
 
