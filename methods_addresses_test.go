@@ -21,7 +21,7 @@ func createAddressesClient(t *testing.T) (c *Client) {
 func TestAddresses(t *testing.T) {
 	c := createAddressesClient(t)
 
-	addresses, err := c.Addresses()
+	addresses, err := c.Addresses(1, 0, "")
 	if err != nil {
 		t.Fatal(err)
 	}

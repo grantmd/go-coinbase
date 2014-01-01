@@ -78,7 +78,7 @@ func (c *Client) Call(http_method string, api_method string, params url.Values) 
 		return nil, err
 	}
 
-	fmt.Println(string(body))
+	//fmt.Println(string(body))
 
 	// TODO: Check status code
 

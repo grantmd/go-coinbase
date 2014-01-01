@@ -4,6 +4,8 @@ package coinbase
 
 import (
 	"encoding/json"
+	"net/url"
+	"strconv"
 )
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,8 +63,22 @@ func (c *Client) AccountReceiveAddress() (interface{}, error) {
 // Addresses
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Addresses() (interface{}, error) {
-	body, err := c.Call("GET", "addresses", nil)
+func (c *Client) Addresses(page int, limit int, query string) (interface{}, error) {
+
+	params := url.Values{}
+	if page != 0 {
+		params.Set("page", strconv.Itoa(page))
+	}
+
+	if limit != 0 {
+		params.Set("limit", strconv.Itoa(limit))
+	}
+
+	if query != "" {
+		params.Set("query", query)
+	}
+
+	body, err := c.Call("GET", "addresses", params)
 	if err != nil {
 		return nil, err
 	}
