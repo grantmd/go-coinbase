@@ -4,7 +4,6 @@ package coinbase
 
 import (
 	"encoding/json"
-	"net/url"
 	"strconv"
 )
 
@@ -59,23 +58,52 @@ func (c *Client) AccountReceiveAddress() (interface{}, error) {
 	return response, nil
 }
 
+func (c *Client) AccountGenerateReceiveAddress(callbackURL string) (interface{}, error) {
+	params := make(map[string]interface{})
+	if callbackURL != "" {
+		params["address"] = map[string]string{
+			"callback_url": callbackURL,
+		}
+	}
+
+	body, err := c.Call("POST", "account/generate_receive_address", params)
+	if err != nil {
+		return nil, err
+	}
+
+	type Response struct {
+		Success     bool
+		Address     string
+		CallbackUrl string
+	}
+
+	// parse into json
+	var response Response
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Addresses
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *Client) Addresses(page int, limit int, query string) (interface{}, error) {
 
-	params := url.Values{}
+	params := make(map[string]interface{})
 	if page != 0 {
-		params.Set("page", strconv.Itoa(page))
+		params["page"] = strconv.Itoa(page)
 	}
 
 	if limit != 0 {
-		params.Set("limit", strconv.Itoa(limit))
+		params["limit"] = strconv.Itoa(limit)
 	}
 
 	if query != "" {
-		params.Set("query", query)
+		params["query"] = query
 	}
 
 	body, err := c.Call("GET", "addresses", params)

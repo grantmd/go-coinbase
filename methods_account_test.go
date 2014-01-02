@@ -39,3 +39,23 @@ func TestAccountReceiveAddress(t *testing.T) {
 
 	fmt.Printf("%+v\n", address)
 }
+
+func TestAccountGenerateReceiveAddress(t *testing.T) {
+	/*
+		c := createAccountClient(t)
+
+		address, err := c.AccountGenerateReceiveAddress("")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		fmt.Printf("%+v\n", address)
+
+		address, err = c.AccountGenerateReceiveAddress("http://www.example.com/")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		fmt.Printf("%+v\n", address)
+	*/
+}

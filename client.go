@@ -23,7 +23,7 @@ type Client struct {
 }
 
 // Call an API method with auth, return the raw, unprocessed body
-func (c *Client) Call(http_method string, api_method string, params url.Values) ([]byte, error) {
+func (c *Client) Call(http_method string, api_method string, params map[string]interface{}) ([]byte, error) {
 	// Build HTTP client
 	if c.httpClient == nil {
 		c.httpClient = &http.Client{}
@@ -32,18 +32,18 @@ func (c *Client) Call(http_method string, api_method string, params url.Values) 
 	apiURL := COINBASE_API_ENDPOINT + api_method
 
 	if params == nil {
-		params = url.Values{}
+		params = make(map[string]interface{}, 1)
 	}
 
 	if c.APIKey != "" {
-		params.Set("api_key", c.APIKey)
+		params["api_key"] = c.APIKey
 	}
 
 	var req *http.Request
 	var err error
 	if http_method == "POST" {
-		// TODO: Need to massage the params a bit
 		postBody, err := json.Marshal(params)
+		fmt.Println(string(postBody))
 		if err != nil {
 			return nil, err
 		}
@@ -53,7 +53,11 @@ func (c *Client) Call(http_method string, api_method string, params url.Values) 
 			return nil, err
 		}
 	} else if http_method == "GET" {
-		apiURL = apiURL + "/?" + params.Encode()
+		getParams := url.Values{}
+		for k, v := range params {
+			getParams.Set(k, v.(string))
+		}
+		apiURL = apiURL + "/?" + getParams.Encode()
 		req, err = http.NewRequest("GET", apiURL, nil)
 		if err != nil {
 			return nil, err
