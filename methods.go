@@ -45,7 +45,7 @@ func (c *Client) AccountReceiveAddress() (interface{}, error) {
 	type Response struct {
 		Success     bool
 		Address     string
-		CallbackUrl string
+		CallbackUrl string `json:"callback_url"`
 	}
 
 	// parse into json
@@ -74,7 +74,7 @@ func (c *Client) AccountGenerateReceiveAddress(callbackURL string) (interface{},
 	type Response struct {
 		Success     bool
 		Address     string
-		CallbackUrl string
+		CallbackUrl string `json:"callback_url"`
 	}
 
 	// parse into json
@@ -114,9 +114,9 @@ func (c *Client) Addresses(page int, limit int, query string) (interface{}, erro
 	type Address struct {
 		Address struct {
 			Address     string
-			CallbackUrl string
+			CallbackUrl string `json:"callback_url"`
 			Label       string
-			CreatedAt   string
+			CreatedAt   string `json:"created_at"`
 		}
 	}
 
