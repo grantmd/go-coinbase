@@ -8,7 +8,7 @@ import (
 func TestUnauthed(t *testing.T) {
 	c := &Client{}
 
-	body, err := c.Call("GET", "prices/spot_rate", nil)
+	body, err := c.Get("prices/spot_rate", nil)
 	if err != nil {
 		t.Fatal(err)
 	}

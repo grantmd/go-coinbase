@@ -4,6 +4,7 @@ package coinbase
 
 import (
 	"encoding/json"
+	"net/url"
 	"strconv"
 )
 
@@ -16,7 +17,7 @@ import (
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *Client) AccountBalance() (interface{}, error) {
-	body, err := c.Call("GET", "account/balance", nil)
+	body, err := c.Get("account/balance", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +38,7 @@ func (c *Client) AccountBalance() (interface{}, error) {
 }
 
 func (c *Client) AccountReceiveAddress() (interface{}, error) {
-	body, err := c.Call("GET", "account/receive_address", nil)
+	body, err := c.Get("account/receive_address", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +67,7 @@ func (c *Client) AccountGenerateReceiveAddress(callbackURL string) (interface{},
 		}
 	}
 
-	body, err := c.Call("POST", "account/generate_receive_address", params)
+	body, err := c.PostJSON("account/generate_receive_address", params)
 	if err != nil {
 		return nil, err
 	}
@@ -93,20 +94,20 @@ func (c *Client) AccountGenerateReceiveAddress(callbackURL string) (interface{},
 
 func (c *Client) Addresses(page int, limit int, query string) (interface{}, error) {
 
-	params := make(map[string]interface{})
+	params := url.Values{}
 	if page != 0 {
-		params["page"] = strconv.Itoa(page)
+		params.Set("page", strconv.Itoa(page))
 	}
 
 	if limit != 0 {
-		params["limit"] = strconv.Itoa(limit)
+		params.Set("limit", strconv.Itoa(limit))
 	}
 
 	if query != "" {
-		params["query"] = query
+		params.Set("query", query)
 	}
 
-	body, err := c.Call("GET", "addresses", params)
+	body, err := c.Get("addresses", params)
 	if err != nil {
 		return nil, err
 	}
@@ -150,7 +151,7 @@ func (c *Client) Addresses(page int, limit int, query string) (interface{}, erro
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *Client) Contacts() (interface{}, error) {
-	body, err := c.Call("GET", "contacts", nil)
+	body, err := c.Get("contacts", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -181,7 +182,7 @@ func (c *Client) Contacts() (interface{}, error) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *Client) Currencies() (interface{}, error) {
-	body, err := c.Call("GET", "currencies", nil)
+	body, err := c.Get("currencies", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -197,7 +198,7 @@ func (c *Client) Currencies() (interface{}, error) {
 }
 
 func (c *Client) CurrenciesExchangeRates() (interface{}, error) {
-	body, err := c.Call("GET", "currencies/exchange_rates", nil)
+	body, err := c.Get("currencies/exchange_rates", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -219,7 +220,7 @@ func (c *Client) CurrenciesExchangeRates() (interface{}, error) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *Client) Orders() (interface{}, error) {
-	body, err := c.Call("GET", "orders", nil)
+	body, err := c.Get("orders", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -277,7 +278,7 @@ func (c *Client) Orders() (interface{}, error) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *Client) PricesBuy() (interface{}, error) {
-	body, err := c.Call("GET", "prices/buy", nil)
+	body, err := c.Get("prices/buy", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -304,7 +305,7 @@ func (c *Client) PricesBuy() (interface{}, error) {
 }
 
 func (c *Client) PricesSell() (interface{}, error) {
-	body, err := c.Call("GET", "prices/sell", nil)
+	body, err := c.Get("prices/sell", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -333,7 +334,7 @@ func (c *Client) PricesSell() (interface{}, error) {
 }
 
 func (c *Client) SpotRate() (interface{}, error) {
-	body, err := c.Call("GET", "prices/spot_rate", nil)
+	body, err := c.Get("prices/spot_rate", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -382,7 +383,7 @@ func (c *Client) SpotRate() (interface{}, error) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (c *Client) Users() (interface{}, error) {
-	body, err := c.Call("GET", "users", nil)
+	body, err := c.Get("users", nil)
 	if err != nil {
 		return nil, err
 	}

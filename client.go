@@ -6,10 +6,10 @@ package coinbase
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 const (
@@ -22,8 +22,33 @@ type Client struct {
 	httpClient *http.Client
 }
 
-// Call an API method with auth, return the raw, unprocessed body
-func (c *Client) Call(http_method string, api_method string, params map[string]interface{}) ([]byte, error) {
+func (c *Client) Get(api_method string, params url.Values) ([]byte, error) {
+	// Build HTTP client
+	if c.httpClient == nil {
+		c.httpClient = &http.Client{}
+	}
+
+	apiURL := COINBASE_API_ENDPOINT + api_method
+
+	if params == nil {
+		params = url.Values{}
+	}
+
+	if c.APIKey != "" {
+		params.Set("api_key", c.APIKey)
+	}
+
+	apiURL = apiURL + "/?" + params.Encode()
+	req, err := http.NewRequest("GET", apiURL, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// Make the request
+	return c.makeRequest(req)
+}
+
+func (c *Client) PostJSON(api_method string, params map[string]interface{}) ([]byte, error) {
 	// Build HTTP client
 	if c.httpClient == nil {
 		c.httpClient = &http.Client{}
@@ -41,32 +66,46 @@ func (c *Client) Call(http_method string, api_method string, params map[string]i
 
 	var req *http.Request
 	var err error
-	if http_method == "POST" {
-		postBody, err := json.Marshal(params)
-		fmt.Println(string(postBody))
-		if err != nil {
-			return nil, err
-		}
+	postBody, err := json.Marshal(params)
+	if err != nil {
+		return nil, err
+	}
 
-		req, err = http.NewRequest("POST", apiURL, bytes.NewReader(postBody))
-		if err != nil {
-			return nil, err
-		}
-	} else if http_method == "GET" {
-		getParams := url.Values{}
-		for k, v := range params {
-			getParams.Set(k, v.(string))
-		}
-		apiURL = apiURL + "/?" + getParams.Encode()
-		req, err = http.NewRequest("GET", apiURL, nil)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		return nil, fmt.Errorf("Unknown HTTP method: %s", http_method)
+	req, err = http.NewRequest("POST", apiURL, bytes.NewReader(postBody))
+	if err != nil {
+		return nil, err
 	}
 
 	// Make the request
+	return c.makeRequest(req)
+}
+
+func (c *Client) PostForm(api_method string, params url.Values) ([]byte, error) {
+	// Build HTTP client
+	if c.httpClient == nil {
+		c.httpClient = &http.Client{}
+	}
+
+	apiURL := COINBASE_API_ENDPOINT + api_method
+
+	if params == nil {
+		params = url.Values{}
+	}
+
+	if c.APIKey != "" {
+		params.Set("api_key", c.APIKey)
+	}
+
+	req, err := http.NewRequest("POST", apiURL, strings.NewReader(params.Encode()))
+	if err != nil {
+		return nil, err
+	}
+
+	// Make the request
+	return c.makeRequest(req)
+}
+
+func (c *Client) makeRequest(req *http.Request) ([]byte, error) {
 	req.Header.Set("Content-type", "application/json")
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
