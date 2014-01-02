@@ -393,16 +393,18 @@ func (c *Client) Users() (interface{}, error) {
 	}
 
 	type User struct {
-		ID             string
-		Name           string
-		Email          string
-		TimeZone       string
-		NativeCurrency string
-		Balance        Amount
-		BuyLevel       int
-		SellLevel      int
-		BuyLimit       Amount
-		SellLimit      Amount
+		User struct {
+			ID             string
+			Name           string
+			Email          string
+			TimeZone       string `json:"time_zone"`
+			NativeCurrency string `json:"native_currency"`
+			Balance        Amount
+			BuyLevel       int    `json:"buy_level"`
+			SellLevel      int    `json:"sell_level"`
+			BuyLimit       Amount `json:"buy_limit"`
+			SellLimit      Amount `json:"sell_limit"`
+		}
 	}
 
 	type Response struct {
