@@ -98,8 +98,6 @@ func (c *Client) PostForm(api_method string, params url.Values) ([]byte, error) 
 		params.Set("api_key", c.APIKey)
 	}
 
-	fmt.Println(params.Encode())
-
 	req, err := http.NewRequest("POST", apiURL, strings.NewReader(params.Encode()))
 	if err != nil {
 		return nil, err
