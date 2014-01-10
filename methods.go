@@ -372,8 +372,6 @@ func (c *Client) Sells(quantity float32) (interface{}, error) {
 		return nil, err
 	}
 
-	fmt.Println(string(body))
-
 	type Amount struct {
 		Amount   string
 		Currency string
