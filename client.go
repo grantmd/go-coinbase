@@ -78,6 +78,7 @@ func (c *Client) PostJSON(api_method string, params map[string]interface{}) ([]b
 	}
 
 	// Make the request
+	req.Header.Set("Content-type", "application/json")
 	return c.makeRequest(req)
 }
 
@@ -97,6 +98,8 @@ func (c *Client) PostForm(api_method string, params url.Values) ([]byte, error) 
 		params.Set("api_key", c.APIKey)
 	}
 
+	fmt.Println(params.Encode())
+
 	req, err := http.NewRequest("POST", apiURL, strings.NewReader(params.Encode()))
 	if err != nil {
 		return nil, err
@@ -107,7 +110,6 @@ func (c *Client) PostForm(api_method string, params url.Values) ([]byte, error) 
 }
 
 func (c *Client) makeRequest(req *http.Request) ([]byte, error) {
-	req.Header.Set("Content-type", "application/json")
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, err
