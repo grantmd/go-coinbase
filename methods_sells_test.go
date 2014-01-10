@@ -19,12 +19,14 @@ func createSellsClient(t *testing.T) (c *Client) {
 }
 
 func TestSells(t *testing.T) {
-	c := createSellsClient(t)
+	/*
+		c := createSellsClient(t)
 
-	users, err := c.Sells(0.00000001)
-	if err != nil {
-		t.Fatal(err)
-	}
+		users, err := c.Sells(0.0003)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	fmt.Printf("%+v\n", users)
+		fmt.Printf("%+v\n", users)
+	*/
 }

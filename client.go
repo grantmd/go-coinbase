@@ -126,6 +126,7 @@ func (c *Client) makeRequest(req *http.Request) ([]byte, error) {
 
 	// Check status code
 	if resp.StatusCode != 200 {
+		fmt.Println(string(body))
 		return nil, fmt.Errorf("Invalid HTTP response code: %d", resp.StatusCode)
 	}
 
