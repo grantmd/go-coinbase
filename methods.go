@@ -147,6 +147,57 @@ func (c *Client) Addresses(page int, limit int, query string) (interface{}, erro
 // Buys
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+func (c *Client) Buys(quantity float32, agree_btc_amount_varies bool) (interface{}, error) {
+	params := url.Values{}
+	params.Set("qty", fmt.Sprintf("%.8f", quantity))
+	if agree_btc_amount_varies {
+		params.Set("agree_btc_amount_varies", "true")
+	}
+
+	body, err := c.PostForm("buys", params)
+	if err != nil {
+		return nil, err
+	}
+
+	type Amount struct {
+		Amount   string
+		Currency string
+	}
+
+	type CentsAmount struct {
+		Cents       int
+		CurrencyISO string `json:"currency_iso"`
+	}
+
+	type Response struct {
+		Success  bool
+		Errors   []string
+		Transfer struct {
+			ID            string
+			Type          string
+			Code          string
+			CreatedAt     string `json:"created_at"`
+			Fees          map[string]CentsAmount
+			Status        string
+			PayoutDate    string `json:"payout_date"`
+			TransactionID string `json:"transaction_id"`
+			BTC           Amount
+			Subtotal      Amount
+			Total         Amount
+			Description   string
+		}
+	}
+
+	// parse into json
+	var response Response
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Contacts
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
