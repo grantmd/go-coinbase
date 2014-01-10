@@ -334,7 +334,7 @@ func (c *Client) PricesSell() (interface{}, error) {
 	return response, nil
 }
 
-func (c *Client) SpotRate() (interface{}, error) {
+func (c *Client) PricesSpotRate() (interface{}, error) {
 	body, err := c.Get("prices/spot_rate", nil)
 	if err != nil {
 		return nil, err
@@ -353,6 +353,20 @@ func (c *Client) SpotRate() (interface{}, error) {
 	}
 
 	return response, nil
+}
+
+func (c *Client) PricesHistorical(page int) (string, error) {
+	params := url.Values{}
+	if page != 0 {
+		params.Set("page", strconv.Itoa(page))
+	}
+
+	body, err := c.Get("prices/historical", params)
+	if err != nil {
+		return "", err
+	}
+
+	return string(body), nil
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

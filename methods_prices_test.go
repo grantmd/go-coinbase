@@ -40,13 +40,24 @@ func TestPricesSell(t *testing.T) {
 	fmt.Printf("%+v\n", prices)
 }
 
-func TestSpotRate(t *testing.T) {
+func TestPricesSpotRate(t *testing.T) {
 	c := createPricesClient(t)
 
-	rate, err := c.SpotRate()
+	rate, err := c.PricesSpotRate()
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	fmt.Printf("%+v\n", rate)
+}
+
+func TestPricesHistorical(t *testing.T) {
+	c := createPricesClient(t)
+
+	historical, err := c.PricesHistorical(1)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println(historical)
 }
