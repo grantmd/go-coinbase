@@ -1,11 +1,12 @@
 package coinbase
 
 import (
+	"fmt"
 	"os"
 	"testing"
 )
 
-func createSellsClient(t *testing.T) (c *Client) {
+func createTransfersClient(t *testing.T) (c *Client) {
 	c = &Client{
 		APIKey: os.Getenv("COINBASE_API_KEY"),
 	}
@@ -17,15 +18,13 @@ func createSellsClient(t *testing.T) (c *Client) {
 	return c
 }
 
-func TestSells(t *testing.T) {
-	/*
-		c := createSellsClient(t)
+func TestTransfers(t *testing.T) {
+	c := createTransfersClient(t)
 
-		sells, err := c.Sells(0.0003)
-		if err != nil {
-			t.Fatal(err)
-		}
+	transfers, err := c.Transfers(1, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-		fmt.Printf("%+v\n", sells)
-	*/
+	fmt.Printf("%+v\n", transfers)
 }

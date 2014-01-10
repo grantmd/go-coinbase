@@ -124,9 +124,9 @@ func (c *Client) Addresses(page int, limit int, query string) (interface{}, erro
 
 	type Response struct {
 		Addresses   []Address
-		TotalCount  int
-		NumPages    int
-		CurrentPage int
+		TotalCount  int `json:"total_count"`
+		NumPages    int `json:"num_pages"`
+		CurrentPage int `json:"current_page"`
 	}
 
 	// parse into json
@@ -169,23 +169,25 @@ func (c *Client) Buys(quantity float32, agree_btc_amount_varies bool) (interface
 		CurrencyISO string `json:"currency_iso"`
 	}
 
+	type Transfer struct {
+		ID            string
+		Type          string
+		Code          string
+		CreatedAt     string `json:"created_at"`
+		Fees          map[string]CentsAmount
+		Status        string
+		PayoutDate    string `json:"payout_date"`
+		TransactionID string `json:"transaction_id"`
+		BTC           Amount
+		Subtotal      Amount
+		Total         Amount
+		Description   string
+	}
+
 	type Response struct {
 		Success  bool
 		Errors   []string
-		Transfer struct {
-			ID            string
-			Type          string
-			Code          string
-			CreatedAt     string `json:"created_at"`
-			Fees          map[string]CentsAmount
-			Status        string
-			PayoutDate    string `json:"payout_date"`
-			TransactionID string `json:"transaction_id"`
-			BTC           Amount
-			Subtotal      Amount
-			Total         Amount
-			Description   string
-		}
+		Transfer Transfer
 	}
 
 	// parse into json
@@ -447,23 +449,25 @@ func (c *Client) Sells(quantity float32) (interface{}, error) {
 		CurrencyISO string `json:"currency_iso"`
 	}
 
+	type Transfer struct {
+		ID            string
+		Type          string
+		Code          string
+		CreatedAt     string `json:"created_at"`
+		Fees          map[string]CentsAmount
+		Status        string
+		PayoutDate    string `json:"payout_date"`
+		TransactionID string `json:"transaction_id"`
+		BTC           Amount
+		Subtotal      Amount
+		Total         Amount
+		Description   string
+	}
+
 	type Response struct {
 		Success  bool
 		Errors   []string
-		Transfer struct {
-			ID            string
-			Type          string
-			Code          string
-			CreatedAt     string `json:"created_at"`
-			Fees          map[string]CentsAmount
-			Status        string
-			PayoutDate    string `json:"payout_date"`
-			TransactionID string `json:"transaction_id"`
-			BTC           Amount
-			Subtotal      Amount
-			Total         Amount
-			Description   string
-		}
+		Transfer Transfer
 	}
 
 	// parse into json
@@ -491,6 +495,63 @@ func (c *Client) Sells(quantity float32) (interface{}, error) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Transfers
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *Client) Transfers(page int, limit int) (interface{}, error) {
+	params := url.Values{}
+	if page != 0 {
+		params.Set("page", strconv.Itoa(page))
+	}
+
+	if limit != 0 {
+		params.Set("limit", strconv.Itoa(limit))
+	}
+
+	body, err := c.Get("transfers", params)
+	if err != nil {
+		return nil, err
+	}
+
+	type CentsAmount struct {
+		Cents       int
+		CurrencyISO string `json:"currency_iso"`
+	}
+
+	type Amount struct {
+		Amount   string
+		Currency string
+	}
+
+	type Transfer struct {
+		ID            string
+		Type          string
+		Code          string
+		CreatedAt     string `json:"created_at"`
+		Fees          map[string]CentsAmount
+		Status        string
+		PayoutDate    string `json:"payout_date"`
+		TransactionID string `json:"transaction_id"`
+		BTC           Amount
+		Subtotal      Amount
+		Total         Amount
+		Description   string
+	}
+
+	type Response struct {
+		Transfers   []map[string]Transfer
+		TotalCount  int `json:"total_count"`
+		NumPages    int `json:"num_pages"`
+		CurrentPage int `json:"current_page"`
+	}
+
+	// parse into json
+	var response Response
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Users
