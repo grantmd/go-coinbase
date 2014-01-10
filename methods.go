@@ -4,6 +4,7 @@ package coinbase
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/url"
 	"strconv"
 )
@@ -361,6 +362,56 @@ func (c *Client) SpotRate() (interface{}, error) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Sells
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (c *Client) Sells(quantity float32) (interface{}, error) {
+	params := url.Values{}
+	params.Set("qty", fmt.Sprintf("%f", quantity))
+
+	body, err := c.PostForm("sells", params)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println(string(body))
+
+	type Amount struct {
+		Amount   string
+		Currency string
+	}
+
+	type CentsAmount struct {
+		Cents       int
+		CurrencyISO string `json:"currency_iso"`
+	}
+
+	type Response struct {
+		Success  bool
+		Errors   []string
+		Transfer struct {
+			ID            string
+			Type          string
+			Code          string
+			CreatedAt     string `json:"created_at"`
+			Fees          map[string]CentsAmount
+			Status        string
+			PayoutDate    string `json:"payout_date"`
+			TransactionID string `json:"transaction_id"`
+			BTC           Amount
+			Subtotal      Amount
+			Total         Amount
+			Description   string
+		}
+	}
+
+	// parse into json
+	var response Response
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Subscribers
