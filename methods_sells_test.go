@@ -1,7 +1,6 @@
 package coinbase
 
 import (
-	"fmt"
 	"os"
 	"testing"
 )
