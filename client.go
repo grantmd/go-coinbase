@@ -6,6 +6,7 @@ package coinbase
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -123,7 +124,10 @@ func (c *Client) makeRequest(req *http.Request) ([]byte, error) {
 
 	//fmt.Println(string(body))
 
-	// TODO: Check status code
+	// Check status code
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("Invalid HTTP response code: %d", resp.StatusCode)
+	}
 
 	// Return
 	return body, nil
