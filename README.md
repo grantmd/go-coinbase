@@ -28,7 +28,7 @@ Usage
 
 	balance, err := c.AccountBalance()
 	if err != nil {
-		t.Fatal(err)
+		log.Fatal(err)
 	}
 
 	fmt.Printf("%+v\n", balance)
