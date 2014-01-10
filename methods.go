@@ -365,7 +365,7 @@ func (c *Client) SpotRate() (interface{}, error) {
 
 func (c *Client) Sells(quantity float32) (interface{}, error) {
 	params := url.Values{}
-	params.Set("qty", fmt.Sprintf("%f", quantity))
+	params.Set("qty", fmt.Sprintf("%.8f", quantity))
 
 	body, err := c.PostForm("sells", params)
 	if err != nil {
