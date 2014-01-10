@@ -3,12 +3,14 @@
 go-coinbase
 =======
 
-A Coinbase API client in Go (golang).
+A Coinbase API client in Go (golang). Focus is currently on buying and selling BTC, but eventually all methods will be supported.
 
 Usage
 -----
 
 * First, get yourself a Coinbase api key: https://coinbase.com/account/api
+
+* Become familiar with the rate limits that apply to your account: https://coinbase.com/verifications
 
 * Install the library:
 
