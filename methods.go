@@ -17,22 +17,17 @@ import (
 // Account
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) AccountBalance() (interface{}, error) {
+func (c *Client) AccountBalance() (Amount, error) {
 	body, err := c.Get("account/balance", nil)
 	if err != nil {
-		return nil, err
-	}
-
-	type Response struct {
-		Amount   string
-		Currency string
+		return Amount{}, err
 	}
 
 	// parse into json
-	var response Response
+	var response Amount
 	err = json.Unmarshal(body, &response)
 	if err != nil {
-		return nil, err
+		return Amount{}, err
 	}
 
 	return response, nil
@@ -157,11 +152,6 @@ func (c *Client) Buys(quantity float32, agree_btc_amount_varies bool) (interface
 	body, err := c.PostForm("buys", params)
 	if err != nil {
 		return nil, err
-	}
-
-	type Amount struct {
-		Amount   string
-		Currency string
 	}
 
 	type CentsAmount struct {
@@ -337,11 +327,6 @@ func (c *Client) PricesBuy() (interface{}, error) {
 		return nil, err
 	}
 
-	type Amount struct {
-		Amount   string
-		Currency string
-	}
-
 	type Response struct {
 		SubTotal Amount
 		Fees     []map[string]Amount
@@ -364,11 +349,6 @@ func (c *Client) PricesSell() (interface{}, error) {
 		return nil, err
 	}
 
-	type Amount struct {
-		Amount   string
-		Currency string
-	}
-
 	type Response struct {
 		SubTotal Amount
 		Fees     []map[string]Amount
@@ -387,22 +367,17 @@ func (c *Client) PricesSell() (interface{}, error) {
 	return response, nil
 }
 
-func (c *Client) PricesSpotRate() (interface{}, error) {
+func (c *Client) PricesSpotRate() (Amount, error) {
 	body, err := c.Get("prices/spot_rate", nil)
 	if err != nil {
-		return nil, err
-	}
-
-	type Response struct {
-		Amount   string
-		Currency string
+		return Amount{}, err
 	}
 
 	// parse into json
-	var response Response
+	var response Amount
 	err = json.Unmarshal(body, &response)
 	if err != nil {
-		return nil, err
+		return Amount{}, err
 	}
 
 	return response, nil
@@ -437,11 +412,6 @@ func (c *Client) Sells(quantity float32) (interface{}, error) {
 	body, err := c.PostForm("sells", params)
 	if err != nil {
 		return nil, err
-	}
-
-	type Amount struct {
-		Amount   string
-		Currency string
 	}
 
 	type CentsAmount struct {
@@ -516,11 +486,6 @@ func (c *Client) Transfers(page int, limit int) (interface{}, error) {
 		CurrencyISO string `json:"currency_iso"`
 	}
 
-	type Amount struct {
-		Amount   string
-		Currency string
-	}
-
 	type Transfer struct {
 		ID            string
 		Type          string
@@ -561,11 +526,6 @@ func (c *Client) Users() (interface{}, error) {
 	body, err := c.Get("users", nil)
 	if err != nil {
 		return nil, err
-	}
-
-	type Amount struct {
-		Amount   string
-		Currency string
 	}
 
 	type User struct {
