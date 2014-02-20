@@ -1,6 +1,6 @@
 package coinbase
 
 type Amount struct {
-	Amount   string
+	Amount   float32 `json:",string"`
 	Currency string
 }
