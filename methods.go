@@ -19,6 +19,7 @@ import (
 
 func (c *Client) AccountBalance() (Amount, error) {
 	body, err := c.Get("account/balance", nil)
+
 	if err != nil {
 		return Amount{}, err
 	}
@@ -26,6 +27,7 @@ func (c *Client) AccountBalance() (Amount, error) {
 	// parse into json
 	var response Amount
 	err = json.Unmarshal(body, &response)
+
 	if err != nil {
 		return Amount{}, err
 	}
@@ -33,30 +35,27 @@ func (c *Client) AccountBalance() (Amount, error) {
 	return response, nil
 }
 
-func (c *Client) AccountReceiveAddress() (interface{}, error) {
+func (c *Client) AccountReceiveAddress() (AccountReceiveAddressResponse, error) {
 	body, err := c.Get("account/receive_address", nil)
-	if err != nil {
-		return nil, err
-	}
 
-	type Response struct {
-		Success     bool
-		Address     string
-		CallbackUrl string `json:"callback_url"`
+	if err != nil {
+		return AccountReceiveAddressResponse{}, err
 	}
 
 	// parse into json
-	var response Response
+	var response AccountReceiveAddressResponse
 	err = json.Unmarshal(body, &response)
+
 	if err != nil {
-		return nil, err
+		return AccountReceiveAddressResponse{}, err
 	}
 
 	return response, nil
 }
 
-func (c *Client) AccountGenerateReceiveAddress(callbackURL string) (interface{}, error) {
+func (c *Client) AccountGenerateReceiveAddress(callbackURL string) (AccountGenerateReceiveAddressResponse, error) {
 	params := make(map[string]interface{})
+
 	if callbackURL != "" {
 		params["address"] = map[string]string{
 			"callback_url": callbackURL,
@@ -65,20 +64,15 @@ func (c *Client) AccountGenerateReceiveAddress(callbackURL string) (interface{},
 
 	body, err := c.PostJSON("account/generate_receive_address", params)
 	if err != nil {
-		return nil, err
-	}
-
-	type Response struct {
-		Success     bool
-		Address     string
-		CallbackUrl string `json:"callback_url"`
+		return AccountGenerateReceiveAddressResponse{}, err
 	}
 
 	// parse into json
-	var response Response
+	var response AccountGenerateReceiveAddressResponse
 	err = json.Unmarshal(body, &response)
+
 	if err != nil {
-		return nil, err
+		return AccountGenerateReceiveAddressResponse{}, err
 	}
 
 	return response, nil
@@ -88,7 +82,7 @@ func (c *Client) AccountGenerateReceiveAddress(callbackURL string) (interface{},
 // Addresses
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Addresses(page int, limit int, query string) (interface{}, error) {
+func (c *Client) Addresses(page int, limit int, query string) (AddressesResponse, error) {
 
 	params := url.Values{}
 	if page != 0 {
@@ -105,30 +99,15 @@ func (c *Client) Addresses(page int, limit int, query string) (interface{}, erro
 
 	body, err := c.Get("addresses", params)
 	if err != nil {
-		return nil, err
-	}
-
-	type Address struct {
-		Address struct {
-			Address     string
-			CallbackUrl string `json:"callback_url"`
-			Label       string
-			CreatedAt   string `json:"created_at"`
-		}
-	}
-
-	type Response struct {
-		Addresses   []Address
-		TotalCount  int `json:"total_count"`
-		NumPages    int `json:"num_pages"`
-		CurrentPage int `json:"current_page"`
+		return AddressesResponse{}, err
 	}
 
 	// parse into json
-	var response Response
+	var response AddressesResponse
 	err = json.Unmarshal(body, &response)
+
 	if err != nil {
-		return nil, err
+		return AddressesResponse{}, err
 	}
 
 	return response, nil
@@ -142,49 +121,25 @@ func (c *Client) Addresses(page int, limit int, query string) (interface{}, erro
 // Buys
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Buys(quantity float32, agree_btc_amount_varies bool) (interface{}, error) {
+func (c *Client) Buys(quantity float32, agree_btc_amount_varies bool) (BuysResponse, error) {
 	params := url.Values{}
 	params.Set("qty", fmt.Sprintf("%.8f", quantity))
+
 	if agree_btc_amount_varies {
 		params.Set("agree_btc_amount_varies", "true")
 	}
 
 	body, err := c.PostForm("buys", params)
 	if err != nil {
-		return nil, err
-	}
-
-	type CentsAmount struct {
-		Cents       int
-		CurrencyISO string `json:"currency_iso"`
-	}
-
-	type Transfer struct {
-		ID            string
-		Type          string
-		Code          string
-		CreatedAt     string `json:"created_at"`
-		Fees          map[string]CentsAmount
-		Status        string
-		PayoutDate    string `json:"payout_date"`
-		TransactionID string `json:"transaction_id"`
-		BTC           Amount
-		Subtotal      Amount
-		Total         Amount
-		Description   string
-	}
-
-	type Response struct {
-		Success  bool
-		Errors   []string
-		Transfer Transfer
+		return BuysResponse{}, err
 	}
 
 	// parse into json
-	var response Response
+	var response BuysResponse
 	err = json.Unmarshal(body, &response)
+
 	if err != nil {
-		return nil, err
+		return BuysResponse{}, err
 	}
 
 	return response, nil
@@ -194,28 +149,19 @@ func (c *Client) Buys(quantity float32, agree_btc_amount_varies bool) (interface
 // Contacts
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Contacts() (interface{}, error) {
+func (c *Client) Contacts() (ContactsResponse, error) {
 	body, err := c.Get("contacts", nil)
+
 	if err != nil {
-		return nil, err
-	}
-
-	type Contact struct {
-		Email string
-	}
-
-	type Response struct {
-		Contacts    []Contact
-		TotalCount  int
-		NumPages    int
-		CurrentPage int
+		return ContactsResponse{}, err
 	}
 
 	// parse into json
-	var response Response
+	var response ContactsResponse
 	err = json.Unmarshal(body, &response)
+
 	if err != nil {
-		return nil, err
+		return ContactsResponse{}, err
 	}
 
 	return response, nil
@@ -225,35 +171,36 @@ func (c *Client) Contacts() (interface{}, error) {
 // Currencies
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Currencies() (interface{}, error) {
+func (c *Client) Currencies() (CurrenciesResponse, error) {
 	body, err := c.Get("currencies", nil)
+
 	if err != nil {
-		return nil, err
+		return CurrenciesResponse{}, err
 	}
 
 	// parse into json
-	var response [][]string
+	var response CurrenciesResponse
 	err = json.Unmarshal(body, &response)
+
 	if err != nil {
-		return nil, err
+		return CurrenciesResponse{}, err
 	}
 
 	return response, nil
 }
 
-func (c *Client) CurrenciesExchangeRates() (interface{}, error) {
+func (c *Client) CurrenciesExchangeRates() (Rates, error) {
 	body, err := c.Get("currencies/exchange_rates", nil)
 	if err != nil {
-		return nil, err
+		return Rates{}, err
 	}
-
-	type Rates map[string]string
 
 	// parse into json
 	var response Rates
 	err = json.Unmarshal(body, &response)
+
 	if err != nil {
-		return nil, err
+		return Rates{}, err
 	}
 
 	return response, nil
@@ -263,55 +210,19 @@ func (c *Client) CurrenciesExchangeRates() (interface{}, error) {
 // Orders
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Orders() (interface{}, error) {
+func (c *Client) Orders() (OrdersResponse, error) {
 	body, err := c.Get("orders", nil)
+
 	if err != nil {
-		return nil, err
-	}
-
-	type TotalCurrency struct {
-		Cents       int
-		CurrencyISO string
-	}
-
-	type Button struct {
-		Type        string
-		Name        string
-		Description string
-		ID          string
-	}
-
-	type Transaction struct {
-		ID            string
-		Hash          string
-		Confirmations int
-	}
-
-	type Order struct {
-		ID        string
-		CreatedAt string
-		Status    string
-
-		TotalBTC    TotalCurrency
-		TotalNative TotalCurrency
-
-		Custom      string
-		Button      Button
-		Transaction Transaction
-	}
-
-	type Response struct {
-		Orders      []Order
-		TotalCount  int
-		NumPages    int
-		CurrentPage int
+		return OrdersResponse{}, err
 	}
 
 	// parse into json
-	var response Response
+	var response OrdersResponse
 	err = json.Unmarshal(body, &response)
+
 	if err != nil {
-		return nil, err
+		return OrdersResponse{}, err
 	}
 
 	return response, nil
@@ -321,47 +232,37 @@ func (c *Client) Orders() (interface{}, error) {
 // Prices
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) PricesBuy() (interface{}, error) {
+func (c *Client) PricesBuy() (PricesBuyResponse, error) {
 	body, err := c.Get("prices/buy", nil)
-	if err != nil {
-		return nil, err
-	}
 
-	type Response struct {
-		SubTotal Amount
-		Fees     []map[string]Amount
-		Total    Amount
+	if err != nil {
+		return PricesBuyResponse{}, err
 	}
 
 	// parse into json
-	var response Response
+	var response PricesBuyResponse
 	err = json.Unmarshal(body, &response)
+
 	if err != nil {
-		return nil, err
+		return PricesBuyResponse{}, err
 	}
 
 	return response, nil
 }
 
-func (c *Client) PricesSell() (interface{}, error) {
+func (c *Client) PricesSell() (PricesSellResponse, error) {
 	body, err := c.Get("prices/sell", nil)
-	if err != nil {
-		return nil, err
-	}
 
-	type Response struct {
-		SubTotal Amount
-		Fees     []map[string]Amount
-		Total    Amount
-		Amount   string
-		Currency string
+	if err != nil {
+		return PricesSellResponse{}, err
 	}
 
 	// parse into json
-	var response Response
+	var response PricesSellResponse
 	err = json.Unmarshal(body, &response)
+
 	if err != nil {
-		return nil, err
+		return PricesSellResponse{}, err
 	}
 
 	return response, nil
@@ -369,6 +270,7 @@ func (c *Client) PricesSell() (interface{}, error) {
 
 func (c *Client) PricesSpotRate() (Amount, error) {
 	body, err := c.Get("prices/spot_rate", nil)
+
 	if err != nil {
 		return Amount{}, err
 	}
@@ -376,6 +278,7 @@ func (c *Client) PricesSpotRate() (Amount, error) {
 	// parse into json
 	var response Amount
 	err = json.Unmarshal(body, &response)
+
 	if err != nil {
 		return Amount{}, err
 	}
@@ -385,11 +288,13 @@ func (c *Client) PricesSpotRate() (Amount, error) {
 
 func (c *Client) PricesHistorical(page int) (string, error) {
 	params := url.Values{}
+
 	if page != 0 {
 		params.Set("page", strconv.Itoa(page))
 	}
 
 	body, err := c.Get("prices/historical", params)
+
 	if err != nil {
 		return "", err
 	}
@@ -405,46 +310,22 @@ func (c *Client) PricesHistorical(page int) (string, error) {
 // Sells
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Sells(quantity float32) (interface{}, error) {
+func (c *Client) Sells(quantity float32) (SellsResponse, error) {
 	params := url.Values{}
 	params.Set("qty", fmt.Sprintf("%.8f", quantity))
 
 	body, err := c.PostForm("sells", params)
+
 	if err != nil {
-		return nil, err
-	}
-
-	type CentsAmount struct {
-		Cents       int
-		CurrencyISO string `json:"currency_iso"`
-	}
-
-	type Transfer struct {
-		ID            string
-		Type          string
-		Code          string
-		CreatedAt     string `json:"created_at"`
-		Fees          map[string]CentsAmount
-		Status        string
-		PayoutDate    string `json:"payout_date"`
-		TransactionID string `json:"transaction_id"`
-		BTC           Amount
-		Subtotal      Amount
-		Total         Amount
-		Description   string
-	}
-
-	type Response struct {
-		Success  bool
-		Errors   []string
-		Transfer Transfer
+		return SellsResponse{}, err
 	}
 
 	// parse into json
-	var response Response
+	var response SellsResponse
 	err = json.Unmarshal(body, &response)
+
 	if err != nil {
-		return nil, err
+		return SellsResponse{}, err
 	}
 
 	return response, nil
@@ -466,8 +347,9 @@ func (c *Client) Sells(quantity float32) (interface{}, error) {
 // Transfers
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Transfers(page int, limit int) (interface{}, error) {
+func (c *Client) Transfers(page int, limit int) (TransfersResponse, error) {
 	params := url.Values{}
+
 	if page != 0 {
 		params.Set("page", strconv.Itoa(page))
 	}
@@ -477,42 +359,17 @@ func (c *Client) Transfers(page int, limit int) (interface{}, error) {
 	}
 
 	body, err := c.Get("transfers", params)
+
 	if err != nil {
-		return nil, err
-	}
-
-	type CentsAmount struct {
-		Cents       int
-		CurrencyISO string `json:"currency_iso"`
-	}
-
-	type Transfer struct {
-		ID            string
-		Type          string
-		Code          string
-		CreatedAt     string `json:"created_at"`
-		Fees          map[string]CentsAmount
-		Status        string
-		PayoutDate    string `json:"payout_date"`
-		TransactionID string `json:"transaction_id"`
-		BTC           Amount
-		Subtotal      Amount
-		Total         Amount
-		Description   string
-	}
-
-	type Response struct {
-		Transfers   []map[string]Transfer
-		TotalCount  int `json:"total_count"`
-		NumPages    int `json:"num_pages"`
-		CurrentPage int `json:"current_page"`
+		return TransfersResponse{}, err
 	}
 
 	// parse into json
-	var response Response
+	var response TransfersResponse
 	err = json.Unmarshal(body, &response)
+
 	if err != nil {
-		return nil, err
+		return TransfersResponse{}, err
 	}
 
 	return response, nil
@@ -522,36 +379,19 @@ func (c *Client) Transfers(page int, limit int) (interface{}, error) {
 // Users
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Users() (interface{}, error) {
+func (c *Client) Users() (UsersResponse, error) {
 	body, err := c.Get("users", nil)
+
 	if err != nil {
-		return nil, err
-	}
-
-	type User struct {
-		User struct {
-			ID             string
-			Name           string
-			Email          string
-			TimeZone       string `json:"time_zone"`
-			NativeCurrency string `json:"native_currency"`
-			Balance        Amount
-			BuyLevel       int    `json:"buy_level"`
-			SellLevel      int    `json:"sell_level"`
-			BuyLimit       Amount `json:"buy_limit"`
-			SellLimit      Amount `json:"sell_limit"`
-		}
-	}
-
-	type Response struct {
-		Users []User
+		return UsersResponse{}, err
 	}
 
 	// parse into json
-	var response Response
+	var response UsersResponse
 	err = json.Unmarshal(body, &response)
+
 	if err != nil {
-		return nil, err
+		return UsersResponse{}, err
 	}
 
 	return response, nil
