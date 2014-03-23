@@ -21,7 +21,7 @@ func createContactsClient(t *testing.T) (c *Client) {
 func TestContacts(t *testing.T) {
 	c := createContactsClient(t)
 
-	contacts, err := c.Contacts()
+	contacts, err := c.GetContacts()
 	if err != nil {
 		t.Fatal(err)
 	}

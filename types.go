@@ -29,13 +29,7 @@ type Transfer struct {
 // Account
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-type AccountReceiveAddressResponse struct {
-	Success     bool
-	Address     string
-	CallbackUrl string `json:"callback_url"`
-}
-
-type AccountGenerateReceiveAddressResponse struct {
+type AccountReceiveAddress struct {
 	Success     bool
 	Address     string
 	CallbackUrl string `json:"callback_url"`
@@ -54,7 +48,7 @@ type Address struct {
 	}
 }
 
-type AddressesResponse struct {
+type Addresses struct {
 	Addresses   []Address
 	TotalCount  int `json:"total_count"`
 	NumPages    int `json:"num_pages"`
@@ -69,7 +63,7 @@ type Contact struct {
 	Email string
 }
 
-type ContactsResponse struct {
+type Contacts struct {
 	Contacts    []Contact
 	TotalCount  int
 	NumPages    int
@@ -80,9 +74,8 @@ type ContactsResponse struct {
 // Currencies
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-type Rates map[string]string
-
-type CurrenciesResponse [][]string
+type ExchangeRates map[string]string
+type Currencies [][]string
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Orders
@@ -119,7 +112,7 @@ type Order struct {
 	Transaction Transaction
 }
 
-type OrdersResponse struct {
+type Orders struct {
 	Orders      []Order
 	TotalCount  int
 	NumPages    int
@@ -130,13 +123,13 @@ type OrdersResponse struct {
 // Prices
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type PricesBuyResponse struct {
+type PricesBuy struct {
 	SubTotal Amount
 	Fees     []map[string]Amount
 	Total    Amount
 }
 
-type PricesSellResponse struct {
+type PricesSell struct {
 	SubTotal Amount
 	Fees     []map[string]Amount
 	Total    Amount
@@ -148,7 +141,7 @@ type PricesSellResponse struct {
 // Sells
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type SellsResponse struct {
+type Sells struct {
 	Success  bool
 	Errors   []string
 	Transfer Transfer
@@ -158,7 +151,7 @@ type SellsResponse struct {
 // Buys
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type BuysResponse struct {
+type Buys struct {
 	Success  bool
 	Errors   []string
 	Transfer Transfer
@@ -168,7 +161,7 @@ type BuysResponse struct {
 // Transfers
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type TransfersResponse struct {
+type Transfers struct {
 	Transfers   []map[string]Transfer
 	TotalCount  int `json:"total_count"`
 	NumPages    int `json:"num_pages"`
@@ -194,6 +187,6 @@ type User struct {
 	}
 }
 
-type UsersResponse struct {
+type Users struct {
 	Users []User
 }

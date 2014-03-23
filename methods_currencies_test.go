@@ -21,7 +21,8 @@ func createCurrenciesClient(t *testing.T) (c *Client) {
 func TestCurrencies(t *testing.T) {
 	c := createCurrenciesClient(t)
 
-	currencies, err := c.Currencies()
+	currencies, err := c.GetCurrencies()
+	
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -32,7 +33,8 @@ func TestCurrencies(t *testing.T) {
 func TestCurrenciesExchangeRates(t *testing.T) {
 	c := createCurrenciesClient(t)
 
-	rates, err := c.CurrenciesExchangeRates()
+	rates, err := c.GetExchangeRates()
+	
 	if err != nil {
 		t.Fatal(err)
 	}

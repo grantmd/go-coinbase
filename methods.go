@@ -17,7 +17,7 @@ import (
 // Account
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) AccountBalance() (Amount, error) {
+func (c *Client) GetAccountBalance() (Amount, error) {
 	body, err := c.Get("account/balance", nil)
 
 	if err != nil {
@@ -35,25 +35,25 @@ func (c *Client) AccountBalance() (Amount, error) {
 	return response, nil
 }
 
-func (c *Client) AccountReceiveAddress() (AccountReceiveAddressResponse, error) {
+func (c *Client) GetAccountReceiveAddress() (AccountReceiveAddress, error) {
 	body, err := c.Get("account/receive_address", nil)
 
 	if err != nil {
-		return AccountReceiveAddressResponse{}, err
+		return AccountReceiveAddress{}, err
 	}
 
 	// parse into json
-	var response AccountReceiveAddressResponse
+	var response AccountReceiveAddress
 	err = json.Unmarshal(body, &response)
 
 	if err != nil {
-		return AccountReceiveAddressResponse{}, err
+		return AccountReceiveAddress{}, err
 	}
 
 	return response, nil
 }
 
-func (c *Client) AccountGenerateReceiveAddress(callbackURL string) (AccountGenerateReceiveAddressResponse, error) {
+func (c *Client) GenerateAccountReceiveAddress(callbackURL string) (AccountReceiveAddress, error) {
 	params := make(map[string]interface{})
 
 	if callbackURL != "" {
@@ -64,15 +64,15 @@ func (c *Client) AccountGenerateReceiveAddress(callbackURL string) (AccountGener
 
 	body, err := c.PostJSON("account/generate_receive_address", params)
 	if err != nil {
-		return AccountGenerateReceiveAddressResponse{}, err
+		return AccountReceiveAddress{}, err
 	}
 
 	// parse into json
-	var response AccountGenerateReceiveAddressResponse
+	var response AccountReceiveAddress
 	err = json.Unmarshal(body, &response)
 
 	if err != nil {
-		return AccountGenerateReceiveAddressResponse{}, err
+		return AccountReceiveAddress{}, err
 	}
 
 	return response, nil
@@ -82,7 +82,7 @@ func (c *Client) AccountGenerateReceiveAddress(callbackURL string) (AccountGener
 // Addresses
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Addresses(page int, limit int, query string) (AddressesResponse, error) {
+func (c *Client) GetAddresses(page int, limit int, query string) (Addresses, error) {
 
 	params := url.Values{}
 	if page != 0 {
@@ -99,15 +99,15 @@ func (c *Client) Addresses(page int, limit int, query string) (AddressesResponse
 
 	body, err := c.Get("addresses", params)
 	if err != nil {
-		return AddressesResponse{}, err
+		return Addresses{}, err
 	}
 
 	// parse into json
-	var response AddressesResponse
+	var response Addresses
 	err = json.Unmarshal(body, &response)
 
 	if err != nil {
-		return AddressesResponse{}, err
+		return Addresses{}, err
 	}
 
 	return response, nil
@@ -121,7 +121,7 @@ func (c *Client) Addresses(page int, limit int, query string) (AddressesResponse
 // Buys
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Buys(quantity float32, agree_btc_amount_varies bool) (BuysResponse, error) {
+func (c *Client) GetBuys(quantity float32, agree_btc_amount_varies bool) (Buys, error) {
 	params := url.Values{}
 	params.Set("qty", fmt.Sprintf("%.8f", quantity))
 
@@ -131,15 +131,15 @@ func (c *Client) Buys(quantity float32, agree_btc_amount_varies bool) (BuysRespo
 
 	body, err := c.PostForm("buys", params)
 	if err != nil {
-		return BuysResponse{}, err
+		return Buys{}, err
 	}
 
 	// parse into json
-	var response BuysResponse
+	var response Buys
 	err = json.Unmarshal(body, &response)
 
 	if err != nil {
-		return BuysResponse{}, err
+		return Buys{}, err
 	}
 
 	return response, nil
@@ -149,19 +149,19 @@ func (c *Client) Buys(quantity float32, agree_btc_amount_varies bool) (BuysRespo
 // Contacts
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Contacts() (ContactsResponse, error) {
+func (c *Client) GetContacts() (Contacts, error) {
 	body, err := c.Get("contacts", nil)
 
 	if err != nil {
-		return ContactsResponse{}, err
+		return Contacts{}, err
 	}
 
 	// parse into json
-	var response ContactsResponse
+	var response Contacts
 	err = json.Unmarshal(body, &response)
 
 	if err != nil {
-		return ContactsResponse{}, err
+		return Contacts{}, err
 	}
 
 	return response, nil
@@ -171,36 +171,37 @@ func (c *Client) Contacts() (ContactsResponse, error) {
 // Currencies
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Currencies() (CurrenciesResponse, error) {
+func (c *Client) GetCurrencies() (Currencies, error) {
 	body, err := c.Get("currencies", nil)
 
 	if err != nil {
-		return CurrenciesResponse{}, err
+		return Currencies{}, err
 	}
 
 	// parse into json
-	var response CurrenciesResponse
+	var response Currencies
 	err = json.Unmarshal(body, &response)
 
 	if err != nil {
-		return CurrenciesResponse{}, err
+		return Currencies{}, err
 	}
 
 	return response, nil
 }
 
-func (c *Client) CurrenciesExchangeRates() (Rates, error) {
+func (c *Client) GetExchangeRates() (ExchangeRates, error) {
 	body, err := c.Get("currencies/exchange_rates", nil)
+	
 	if err != nil {
-		return Rates{}, err
+		return ExchangeRates{}, err
 	}
 
 	// parse into json
-	var response Rates
+	var response ExchangeRates
 	err = json.Unmarshal(body, &response)
 
 	if err != nil {
-		return Rates{}, err
+		return ExchangeRates{}, err
 	}
 
 	return response, nil
@@ -210,19 +211,19 @@ func (c *Client) CurrenciesExchangeRates() (Rates, error) {
 // Orders
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Orders() (OrdersResponse, error) {
+func (c *Client) GetOrders() (Orders, error) {
 	body, err := c.Get("orders", nil)
 
 	if err != nil {
-		return OrdersResponse{}, err
+		return Orders{}, err
 	}
 
 	// parse into json
-	var response OrdersResponse
+	var response Orders
 	err = json.Unmarshal(body, &response)
 
 	if err != nil {
-		return OrdersResponse{}, err
+		return Orders{}, err
 	}
 
 	return response, nil
@@ -232,43 +233,43 @@ func (c *Client) Orders() (OrdersResponse, error) {
 // Prices
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) PricesBuy() (PricesBuyResponse, error) {
+func (c *Client) GetPricesBuy() (PricesBuy, error) {
 	body, err := c.Get("prices/buy", nil)
 
 	if err != nil {
-		return PricesBuyResponse{}, err
+		return PricesBuy{}, err
 	}
 
 	// parse into json
-	var response PricesBuyResponse
+	var response PricesBuy
 	err = json.Unmarshal(body, &response)
 
 	if err != nil {
-		return PricesBuyResponse{}, err
+		return PricesBuy{}, err
 	}
 
 	return response, nil
 }
 
-func (c *Client) PricesSell() (PricesSellResponse, error) {
+func (c *Client) GetPricesSell() (PricesSell, error) {
 	body, err := c.Get("prices/sell", nil)
 
 	if err != nil {
-		return PricesSellResponse{}, err
+		return PricesSell{}, err
 	}
 
 	// parse into json
-	var response PricesSellResponse
+	var response PricesSell
 	err = json.Unmarshal(body, &response)
 
 	if err != nil {
-		return PricesSellResponse{}, err
+		return PricesSell{}, err
 	}
 
 	return response, nil
 }
 
-func (c *Client) PricesSpotRate() (Amount, error) {
+func (c *Client) GetSpotRate() (Amount, error) {
 	body, err := c.Get("prices/spot_rate", nil)
 
 	if err != nil {
@@ -286,7 +287,7 @@ func (c *Client) PricesSpotRate() (Amount, error) {
 	return response, nil
 }
 
-func (c *Client) PricesHistorical(page int) (string, error) {
+func (c *Client) GetHistoricalPrices(page int) (string, error) {
 	params := url.Values{}
 
 	if page != 0 {
@@ -310,22 +311,22 @@ func (c *Client) PricesHistorical(page int) (string, error) {
 // Sells
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Sells(quantity float32) (SellsResponse, error) {
+func (c *Client) GetSells(quantity float32) (Sells, error) {
 	params := url.Values{}
 	params.Set("qty", fmt.Sprintf("%.8f", quantity))
 
 	body, err := c.PostForm("sells", params)
 
 	if err != nil {
-		return SellsResponse{}, err
+		return Sells{}, err
 	}
 
 	// parse into json
-	var response SellsResponse
+	var response Sells
 	err = json.Unmarshal(body, &response)
 
 	if err != nil {
-		return SellsResponse{}, err
+		return Sells{}, err
 	}
 
 	return response, nil
@@ -347,7 +348,7 @@ func (c *Client) Sells(quantity float32) (SellsResponse, error) {
 // Transfers
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Transfers(page int, limit int) (TransfersResponse, error) {
+func (c *Client) GetTransfers(page int, limit int) (Transfers, error) {
 	params := url.Values{}
 
 	if page != 0 {
@@ -361,15 +362,15 @@ func (c *Client) Transfers(page int, limit int) (TransfersResponse, error) {
 	body, err := c.Get("transfers", params)
 
 	if err != nil {
-		return TransfersResponse{}, err
+		return Transfers{}, err
 	}
 
 	// parse into json
-	var response TransfersResponse
+	var response Transfers
 	err = json.Unmarshal(body, &response)
 
 	if err != nil {
-		return TransfersResponse{}, err
+		return Transfers{}, err
 	}
 
 	return response, nil
@@ -379,19 +380,19 @@ func (c *Client) Transfers(page int, limit int) (TransfersResponse, error) {
 // Users
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (c *Client) Users() (UsersResponse, error) {
+func (c *Client) GetUsers() (Users, error) {
 	body, err := c.Get("users", nil)
 
 	if err != nil {
-		return UsersResponse{}, err
+		return Users{}, err
 	}
 
 	// parse into json
-	var response UsersResponse
+	var response Users
 	err = json.Unmarshal(body, &response)
 
 	if err != nil {
-		return UsersResponse{}, err
+		return Users{}, err
 	}
 
 	return response, nil

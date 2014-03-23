@@ -21,7 +21,7 @@ func createAccountClient(t *testing.T) (c *Client) {
 func TestAccountBalance(t *testing.T) {
 	c := createAccountClient(t)
 
-	balance, err := c.AccountBalance()
+	balance, err := c.GetAccountBalance()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -32,7 +32,7 @@ func TestAccountBalance(t *testing.T) {
 func TestAccountReceiveAddress(t *testing.T) {
 	c := createAccountClient(t)
 
-	address, err := c.AccountReceiveAddress()
+	address, err := c.GetAccountReceiveAddress()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -44,14 +44,16 @@ func TestAccountGenerateReceiveAddress(t *testing.T) {
 	/*
 		c := createAccountClient(t)
 
-		address, err := c.AccountGenerateReceiveAddress("")
+		address, err := c.GenerateAccountReceiveAddress("")
+		
 		if err != nil {
 			t.Fatal(err)
 		}
 
 		fmt.Printf("%+v\n", address)
 
-		address, err = c.AccountGenerateReceiveAddress("http://www.example.com/")
+		address, err = c.GenerateAccountReceiveAddress("http://www.example.com/")
+		
 		if err != nil {
 			t.Fatal(err)
 		}

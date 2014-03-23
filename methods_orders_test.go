@@ -21,7 +21,8 @@ func createOrdersClient(t *testing.T) (c *Client) {
 func TestOrders(t *testing.T) {
 	c := createOrdersClient(t)
 
-	orders, err := c.Orders()
+	orders, err := c.GetOrders()
+	
 	if err != nil {
 		t.Fatal(err)
 	}
