@@ -21,7 +21,7 @@ func createPricesClient(t *testing.T) (c *Client) {
 func TestPricesBuy(t *testing.T) {
 	c := createPricesClient(t)
 
-	prices, err := c.PricesBuy()
+	prices, err := c.GetPricesBuy()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -32,7 +32,7 @@ func TestPricesBuy(t *testing.T) {
 func TestPricesSell(t *testing.T) {
 	c := createPricesClient(t)
 
-	prices, err := c.PricesSell()
+	prices, err := c.GetPricesSell()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -43,7 +43,7 @@ func TestPricesSell(t *testing.T) {
 func TestPricesSpotRate(t *testing.T) {
 	c := createPricesClient(t)
 
-	rate, err := c.PricesSpotRate()
+	rate, err := c.GetSpotRate()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -54,7 +54,8 @@ func TestPricesSpotRate(t *testing.T) {
 func TestPricesHistorical(t *testing.T) {
 	c := createPricesClient(t)
 
-	historical, err := c.PricesHistorical(1)
+	historical, err := c.GetHistoricalPrices(1)
+	
 	if err != nil {
 		t.Fatal(err)
 	}

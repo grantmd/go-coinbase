@@ -21,7 +21,8 @@ func createUsersClient(t *testing.T) (c *Client) {
 func TestUsers(t *testing.T) {
 	c := createUsersClient(t)
 
-	users, err := c.Users()
+	users, err := c.GetUsers()
+	
 	if err != nil {
 		t.Fatal(err)
 	}

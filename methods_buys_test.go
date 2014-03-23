@@ -21,7 +21,7 @@ func TestBuys(t *testing.T) {
 	/*
 		c := createBuysClient(t)
 
-		users, err := c.Buys(0.0003, false)
+		users, err := c.GetBuys(0.0003, false)
 		if err != nil {
 			t.Fatal(err)
 		}

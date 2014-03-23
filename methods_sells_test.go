@@ -21,7 +21,7 @@ func TestSells(t *testing.T) {
 	/*
 		c := createSellsClient(t)
 
-		sells, err := c.Sells(0.0003)
+		sells, err := c.GetSells(0.0003)
 		if err != nil {
 			t.Fatal(err)
 		}

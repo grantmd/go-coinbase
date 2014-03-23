@@ -21,7 +21,7 @@ func createTransfersClient(t *testing.T) (c *Client) {
 func TestTransfers(t *testing.T) {
 	c := createTransfersClient(t)
 
-	transfers, err := c.Transfers(1, 0)
+	transfers, err := c.GetTransfers(1, 0)
 	if err != nil {
 		t.Fatal(err)
 	}
