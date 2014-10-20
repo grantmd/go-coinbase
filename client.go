@@ -5,44 +5,55 @@ package coinbase
 
 import (
 	"bytes"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
+	"time"
 )
 
 const (
-	COINBASE_API_ENDPOINT = "https://coinbase.com/api/v1/"
+	COINBASE_API_ENDPOINT = "https://api.coinbase.com/v1/"
 )
 
 // The client holds the necessary keys and our HTTP client for making requests
 type Client struct {
-	APIKey     string
+	APIKey    string
+	APISecret string
+
 	httpClient *http.Client
 }
 
 func (c *Client) Get(api_method string, params url.Values) ([]byte, error) {
-	// Build HTTP client
 	if c.httpClient == nil {
 		c.httpClient = &http.Client{}
 	}
 
-	apiURL := COINBASE_API_ENDPOINT + api_method
+	api_url := COINBASE_API_ENDPOINT + api_method
+
+	req, err := http.NewRequest("GET", api_url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	api_nonce := strconv.FormatInt(time.Now().UnixNano(), 10)
+	api_msg := api_nonce + api_url
+	api_sign := getHMAC(api_msg, c.APISecret)
+
+	req.Header.Add("ACCESS_KEY", c.APIKey)
+	req.Header.Add("ACCESS_NONCE", api_nonce)
+	req.Header.Add("ACCESS_SIGNATURE", api_sign)
+
+	req.Header.Add("Accept", "application/json")
 
 	if params == nil {
 		params = url.Values{}
-	}
-
-	if c.APIKey != "" {
-		params.Set("api_key", c.APIKey)
-	}
-
-	apiURL = apiURL + "/?" + params.Encode()
-	req, err := http.NewRequest("GET", apiURL, nil)
-	if err != nil {
-		return nil, err
 	}
 
 	// Make the request
@@ -122,7 +133,7 @@ func (c *Client) makeRequest(req *http.Request) ([]byte, error) {
 		return nil, err
 	}
 
-	//fmt.Println(string(body))
+	fmt.Println(string(body))
 
 	// Check status code
 	if resp.StatusCode != 200 {
@@ -132,4 +143,14 @@ func (c *Client) makeRequest(req *http.Request) ([]byte, error) {
 
 	// Return
 	return body, nil
+}
+
+func getHMAC(msg, key string) string {
+	key_bytes := []byte(key)
+	msg_bytes := []byte(msg)
+
+	mac := hmac.New(sha256.New, key_bytes)
+	mac.Write(msg_bytes)
+
+	return hex.EncodeToString(mac.Sum(nil))
 }
