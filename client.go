@@ -133,7 +133,7 @@ func (c *Client) makeRequest(req *http.Request) ([]byte, error) {
 		return nil, err
 	}
 
-	//fmt.Println(string(body))
+	fmt.Println(string(body))
 
 	// Check status code
 	if resp.StatusCode != 200 {
