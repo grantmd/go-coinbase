@@ -23,7 +23,8 @@ Usage
 * Setup your Coinbase client:
 
         c := &coinbase.Client{
-		APIKey: os.Getenv("COINBASE_API_KEY"),
+    APIKey: os.Getenv("COINBASE_API_KEY"),
+    APISecret: os.Getenv("COINBASE_API_SECRET"),
 	}
 
 * Make a call with your API key:
