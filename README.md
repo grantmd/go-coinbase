@@ -23,15 +23,15 @@ Usage
 * Setup your Coinbase client:
 
         c := &coinbase.Client{
-    APIKey: os.Getenv("COINBASE_API_KEY"),
-    APISecret: os.Getenv("COINBASE_API_SECRET"),
-	}
+        	APIKey: os.Getenv("COINBASE_API_KEY"),
+        	APISecret: os.Getenv("COINBASE_API_SECRET"),
+        }
 
 * Make a call with your API key:
 
-	balance, err := c.AccountBalance()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("%+v\n", balance)
+		balance, err := c.AccountBalance()
+		if err != nil {
+			log.Fatal(err)
+		}
+	
+		fmt.Printf("%+v\n", balance)
